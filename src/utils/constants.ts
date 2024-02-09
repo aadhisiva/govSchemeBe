@@ -30,9 +30,15 @@ export enum MOBILE_MESSAGES {
     UPDATE='Update Exist Data',
     GET_CHILD_DATA="Get Child Data From External Source",
     GET_KUTUMBA_DATA="Get Kutumba Data From External Source",
+    SUBMIT_DATA="Submit Data.",
 };
 
 export enum API_MESSAGES {
     VERIFICATION_FAILED='Verification Failed',
+    VERIFICATION_SUCCESS='Verification Success'
+};
+
+export enum ROLES {
+    SUPER_ADMIN='Super Admin',
     VERIFICATION_SUCCESS='Verification Success'
 };

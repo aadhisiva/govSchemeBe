@@ -22,8 +22,8 @@ export class OtpServices {
     };
 
     async sendSmsInKannadaUnicode(mobile_no, otp) {
-        let text = `ಅಪ್ಲಿಕೇಶನ್ ಲಾಗಿನ್ ಒಟಿಪಿ ${otp}.
-        -NHM, Gok`;
+        let text = `ಅಪ್ಲಿಕೇಶನ್ ಲಾಗಿನ್ ಒಟಿಪಿ ${otp}
+        -ಕರ್ನಾಟಕ ಸರ್ಕಾರ`;
         let sendSingleSms = await this.smsServices.sendSingleUnicode(
             process.env.SMS_USERNAME,
             process.env.SMS_PASSWORD,

@@ -48,18 +48,22 @@ export function generateUniqueId() {
 
 // generate sequence wise id
 export const incrementGenerator = async () => {
-  let defaultString = 'OSS';
-  let findString = await AppDataSource.getRepository(RefractionistLogin).find({
-    order: {
-      UserId: 'DESC'
-    },
-    take: 1
-  });
-  if (!findString[0]) {
-    return `${defaultString}1`;
-  } else {
-    let [name, number] = findString[0]?.UserId.split('SS')[1];
-    return `${defaultString}${+number + 1}`
+  try {
+    let defaultString = 'GS';
+    let findString = await AppDataSource.getRepository(RefractionistLogin).find({
+      order: {
+        UserId: 'DESC'
+      },
+      take: 1
+    });
+    if (!findString[0]) {
+      return `${defaultString}1`;
+    } else {
+      let aa = findString[0]?.UserId.split(defaultString)[1];
+      return `${defaultString}${+aa + 1}`
+    }
+  } catch (e) {
+    return e;
   }
 }
 // export function generateUniqueId() {
@@ -125,9 +129,9 @@ export const assignKutumaToTableFormate = (actualData) => {
   data.Dob = actualData.Dob || null;
   data.RelationShip = actualData.RelationShip || null;
   data.RcNo = actualData.RC_NUMBER || null;
-  data.Gj_Flag = actualData.GJ_FLAG || null;
-  data.Gl_flag = actualData.GL_FLAG || null;
-  data.Yn_Flag = actualData.GL_FLAG || null;
+  data.GJ_Flag = actualData.GJ_FLAG || null;
+  data.GL_Flag = actualData.GL_FLAG || null;
+  data.YN_Flag = actualData.GL_FLAG || null;
   data.MemberId = actualData.MEMBER_ID || null;
   data.KutumbaIdStatus = actualData.Kutumba_ID_status || null;
   return data;
@@ -136,12 +140,12 @@ export const assignKutumaToTableFormate = (actualData) => {
 // convert aadhar no to hash for getting details from kutumba
 export const convertAadharToSha256Hex = async (data) => {
   try {
-      let hash = cryptoJs.createHash(process.env.HASHING256);
-      hash.update(data);
-      return hash.digest("hex").toUpperCase();
+    let hash = cryptoJs.createHash(process.env.HASHING256);
+    hash.update(data);
+    return hash.digest("hex").toUpperCase();
   } catch (e) {
-      Logger.error("[******* convertAadharToSha256Hex *******]", e);
-      return e.message;
+    Logger.error("[******* convertAadharToSha256Hex *******]", e);
+    return e.message;
   }
 };
 
@@ -150,21 +154,21 @@ export const HashHMACHex = (hMACKey, InputValue) => {
   let hashHMACHex = '';
 
   const HashHMAC = (message, hmac) => {
-      return hmac.update(message).digest();
+    return hmac.update(message).digest();
   };
   const HashEncode = (hash) => {
-      return Buffer.from(hash).toString('base64');
+    return Buffer.from(hash).toString('base64');
   };
   try {
-      const keyByte = Buffer.from(hMACKey, 'ascii');
-      const hmacsha256 = cryptoJs.createHmac('sha256', keyByte);
-      const messageBytes = Buffer.from(InputValue, 'ascii');
+    const keyByte = Buffer.from(hMACKey, 'ascii');
+    const hmacsha256 = cryptoJs.createHmac('sha256', keyByte);
+    const messageBytes = Buffer.from(InputValue, 'ascii');
 
-      const hash = HashHMAC(messageBytes, hmacsha256);
-      hashHMACHex = HashEncode(hash);
+    const hash = HashHMAC(messageBytes, hmacsha256);
+    hashHMACHex = HashEncode(hash);
   } catch (ex) {
-      Logger.error("Error Message: [" + ex.message.toString() + "]");
-      return ex.message;
+    Logger.error("Error Message: [" + ex.message.toString() + "]");
+    return ex.message;
   }
   return hashHMACHex;
 };

@@ -13,6 +13,9 @@ import {
   
     @Column({type: 'nvarchar', length: 20, default: null})
     RcNo: string;
+
+    @Column({type: 'nvarchar', length: 20, default: null})
+    UserId: string;
     
     @Column({type: 'nvarchar', length: 50, default: null})
     Name: string;
@@ -24,16 +27,16 @@ import {
     Gender: string;
     
     @Column({type: 'nvarchar', length: 50, default: null})
-    MemeberId: string;
+    MemberId: string;
     
     @Column({type: 'nvarchar', length: 20, default: null})
-    Gl_Flag: string;
+    GL_Flag: string;
   
     @Column({type: 'nvarchar', length: 20, default: null})
-    GY_FLag: string;
+    GJ_Flag: string;
   
     @Column({type: 'nvarchar', length: 20, default: null})
-    Yn_Flag: string;
+    YN_Flag: string;
   
     @Column({type: 'nvarchar', length: 20, default: null})
     Dob: string;

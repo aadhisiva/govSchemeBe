@@ -20,7 +20,7 @@ function convertPasswordToSha1(userName) {
         let hash = cryptoJs.createHash('sha1').update(finalString).digest('hex');
         return hash;
     } catch (e) {
-        console.error(e.message);
+        console.error("[ convertPasswordToSha1 ]", e);
         return e.message;
     }
 };
@@ -33,7 +33,7 @@ function hashGenerator(userName, senderId, message, secureKey) {
         hash.update(finalString);
         digestHash = hash.digest("hex");
     } catch (e) {
-        console.error(e.message);
+        console.error("[ hashGenerator ]",e);
         return e.message;
     }
     return digestHash;
@@ -72,7 +72,7 @@ export class SMSServices {
             let result = ((response.data?.includes("402" ) !== true) || (response.status !== 200) || (response?.statusText !== "OK"))? 422 : 200;
             return { code: result, response: response?.data };
         } catch (e) {
-            Logger.error("error",e);
+            Logger.error("[ error ]",e);
             return e.message;
         }
     }
@@ -92,8 +92,9 @@ export class SMSServices {
                 key: key.trim(),
                 templateid: templateId.trim()
             };
-            let resposne = await post_url(process.env.SMS_API, data); // calling post_url to send single unicode sms
-            return resposne.status;
+            let response = await post_url(process.env.SMS_API, data); // calling post_to_url_unicode to send single sms
+            let result = ((response.data?.includes("402" ) !== true) || (response.status !== 200) || (response?.statusText !== "OK"))? 422 : 200;
+            return { code: result, response: response?.data };
         } catch (e) {
             Logger.error("error",e);
             return e;

@@ -30,7 +30,6 @@ export const fetchDataFromKutumba = async (data) => {
             `${process.env.KUTUMA_CLIENT_CODE}___${data.aadhar}_` :
             `${process.env.KUTUMA_CLIENT_CODE}__${data.rc}__`;
         let creteHMAC = HashHMACHex(process.env.KUTUMBA_CLIENT_SEC_KEY, inputValue);
-        console.log("await getReqBody(data, creteHMAC)",await getReqBody(data, creteHMAC))
         let response = await axios.post(process.env.KUTUMBA_API, await getReqBody(data, creteHMAC), {
             headers: {
                 "Accept": "application/json"

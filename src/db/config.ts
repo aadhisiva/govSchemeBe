@@ -13,8 +13,6 @@ import { entities } from "../entityManager";
 
 dotenv.config();
 
-console.log("process.env.PRO_DB_DATABASE",process.env.PRO_DB_DATABASE)
-
 export const AppDataSource= new DataSource({
   type: "mssql",
   host: String(process.env.PRO_DB_HOST),
@@ -23,8 +21,8 @@ export const AppDataSource= new DataSource({
   password: process.env.PRO_DB_PASSWORD,
   database: process.env.PRO_DB_DATABASE,
   entities: entities(),
-  logging: true,
-  synchronize: false,
+  logging: false,
+  synchronize: true,
   options: {
       encrypt: false
   }

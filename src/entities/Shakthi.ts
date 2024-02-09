@@ -16,6 +16,9 @@ import {
     
     @Column({type: 'nvarchar', length: 50, default: null})
     Name: string;
+
+    @Column({type: 'nvarchar', length: 20, default: null})
+    UserId: string;
     
     @Column({type: 'nvarchar', length: 20, default: null})
     Relationship: string;
@@ -24,16 +27,16 @@ import {
     Gender: string;
     
     @Column({type: 'nvarchar', length: 50, default: null})
-    MemeberId: string;
+    MemberId: string;
     
     @Column({type: 'nvarchar', length: 20, default: null})
-    Gl_Flag: string;
+    GL_Flag: string;
   
     @Column({type: 'nvarchar', length: 20, default: null})
-    GY_FLag: string;
+    GJ_Flag: string;
   
     @Column({type: 'nvarchar', length: 20, default: null})
-    Yn_Flag: string;
+    YN_Flag: string;
   
     @Column({type: 'nvarchar', length: 20, default: null})
     Dob: string;
@@ -42,22 +45,19 @@ import {
     Age: string;
   
     @Column({type: 'nvarchar', length: 'max', default: null})
-    AB1: string;
+    SS1: string;
   
     @Column({type: 'nvarchar', length: 'max', default: null})
-    AB2: string;
+    SS2: string;
    
     @Column({type: 'nvarchar', length: 'max', default: null})
-    AB3: string;
+    SS3: string;
   
     @Column({type: 'nvarchar', length: 'max', default: null})
-    AB4: string;
+    SS4: string;
   
     @Column({type: 'nvarchar', length: 'max', default: null})
-    AB5: string;
-  
-    @Column({type: 'nvarchar', length: 'max', default: null})
-    AB6: string;
+    SS5: string;
   
     @Column({type: 'nvarchar', length: 20, default: null})
     SurveyStatus: string;

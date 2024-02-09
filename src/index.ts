@@ -17,7 +17,6 @@ import Logger from './loggers/winstonLogger';
 
 //controllers
 import { adminRouter, userRouter } from "./apiController";
-import path from "path";
 
 // for accessing env variables
 dotenv.config();
@@ -35,7 +34,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // cors setup for communication of sever and client
-app.use(cors({ origin: ['http://103.138.197.145', 'http://localhost:8080', 'http://192.168.45.170:8080'] }));
+app.use(cors({ origin: ['http://103.138.197.190', 'http://localhost', 'http://10.10.40.249'] }));
 
 //setting req headers and res headers 
 app.use(function (req, res, next) {
@@ -61,13 +60,13 @@ AppDataSource.initialize().then(async (connection) => {
   throw new Error("new Connection ERROR " + JSON.stringify(error));
 })
 
-app.get("/run", (req, res) => {
+app.get("/GuranteeScheme/run", (req, res) => {
   res.send("running")
 })
 
 // controllers
-app.use('/user', userRouter);
-app.use('/admin', adminRouter);
+app.use('/GuranteeScheme/user', userRouter);
+app.use('/GuranteeScheme/admin', adminRouter);
 
 // app.listen(port, '192.168.45.170');
 app.listen(port);

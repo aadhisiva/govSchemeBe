@@ -6,37 +6,49 @@ import {
     UpdateDateColumn
   } from "typeorm";
   
-  @Entity()
+  @Entity({ name: "RefractionistLogin"} )
   export class RefractionistLogin {
   
     @PrimaryGeneratedColumn()
     id: number;
   
-    @Column()
+    @Column({type: 'nvarchar', length: 20, default: null})
     UserId: string;
 
-    @Column()
+    @Column({type: 'nvarchar', length: 50, default: null})
     Name: string;
 
-    @Column()
+    @Column({type: 'nvarchar', length: 20, default: null})
     Mobile: string;
 
-    @Column()
+    @Column({type: 'nvarchar', length: 20, default: null})
     Otp: string;
 
-    @Column()
+    @Column({type: 'nvarchar', length: 20, default: null})
+    Role: string;
+
+    @Column({type: 'nvarchar', length: 20, default: null})
+    Type: string;
+
+    @Column({type: 'nvarchar', length: 20, default: null})
+    SubCenterCode: string;
+
+    @Column({type: 'nvarchar', length: 50, default: null})
     Token: string;
 
-    @Column()
+    @Column({type: 'nvarchar', length: 20, default: null})
     TokenExpirationTime: string;
 
-    @Column()
+    @Column({type: 'nvarchar', length: 20, default: null})
     Status: string;
   
-    @Column()
+    @Column({type: 'nvarchar', length: 20, default: null})
     CreatedBy: string;
   
-    @Column()
+    @Column({type: 'nvarchar', length: 20, default: null})
+    CreatedMobile: string;
+  
+    @Column({type: 'nvarchar', length: 20, default: null})
     UpdatedBy: string;
   
     @CreateDateColumn()
