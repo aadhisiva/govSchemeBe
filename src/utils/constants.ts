@@ -40,5 +40,7 @@ export enum API_MESSAGES {
 
 export enum ROLES {
     SUPER_ADMIN='Super Admin',
-    VERIFICATION_SUCCESS='Verification Success'
+    DISTRICT_OFFICER='District Officer',
+    TALUK_OFFICER='Taluk Officer',
+    PHCO_OFFICER='Phco Officer'
 };

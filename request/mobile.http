@@ -1,0 +1,29 @@
+@ProUrl = https://gss.karnataka.gov.in/GuranteeScheme/
+@LocalUrl= http://localhost:8886/GuranteeScheme/user/
+
+POST {{LocalUrl}}getKutumbaData
+content-type: application/json
+
+{
+    "rc": "210600165755"
+}
+# 210600165755
+
+###
+POST {{LocalUrl}}sendOtp
+content-type: application/json
+
+# version: 1.0.0
+{
+    "Mobile": "7780379609"
+}
+
+###
+POST {{LocalUrl}}addUser
+content-type: application/json
+
+{
+    "Mobile": "7780379609"
+}
+
+###

@@ -20,23 +20,20 @@ import {
     @Column({type: 'nvarchar', length: 50, default: null})
     Name: string;
     
+    @Column({type: 'nvarchar', length: 50, default: null})
+    Mobile: string;
+    
     @Column({type: 'nvarchar', length: 20, default: null})
-    Relationship: string;
+    RelationShip: string;
     
     @Column({type: 'nvarchar', length: 20, default: null})
     Gender: string;
     
     @Column({type: 'nvarchar', length: 50, default: null})
     MemberId: string;
-    
-    @Column({type: 'nvarchar', length: 20, default: null})
-    GL_Flag: string;
   
     @Column({type: 'nvarchar', length: 20, default: null})
-    GJ_Flag: string;
-  
-    @Column({type: 'nvarchar', length: 20, default: null})
-    YN_Flag: string;
+    AB_Flag: string;
   
     @Column({type: 'nvarchar', length: 20, default: null})
     Dob: string;
@@ -61,6 +58,9 @@ import {
   
     @Column({type: 'nvarchar', length: 'max', default: null})
     AB6: string;
+
+    @Column({type: 'nvarchar', length: 20, default: null})
+    SurveyMode: string;
   
     @Column({type: 'nvarchar', length: 20, default: null})
     SurveyStatus: string;

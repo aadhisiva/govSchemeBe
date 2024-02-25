@@ -2,12 +2,10 @@ import { Container } from 'typedi';
 import express from "express";
 import { mobileAppResponse, webAppResponse, webAppResponseForLarge } from '../utils/errorHandling';
 import { AdminServices } from '../apiServices/adminServ';
-import { MOBILE_MESSAGES, WEBMESSAGES, WEBPAGES } from '../utils/constants';
-import { authTokenAndVersion } from '../utils/middlewares';
+import { WEBMESSAGES } from '../utils/constants';
 import { AppDataSource } from '../db/config';
 import { GSMasterData } from '../entities';
 import { data } from "../dummy";
-import { getRoleAndUserId } from '../utils/resuableCode';
 
 
 const adminRouter = express.Router()
@@ -54,6 +52,36 @@ adminRouter.post('/getAllAssignedUsers', async (req, res) => {
     }
 });
 
+adminRouter.post('/getDashBoardCounts', async (req, res) => {
+    try {
+        let body = req.body;
+       let result = await adminServices.getDashBoardCounts(body);
+        return await webAppResponse(res, result, "", "Master Data", WEBMESSAGES.GET_ALLDATA, "userid", "role");
+    } catch (error) {
+        return await webAppResponse(res, error);
+    }
+});
+
+adminRouter.post('/addDistrictAndTalukUser', async (req, res) => {
+    try {
+        let body = req.body;
+       let result = await adminServices.addDistrictAndTalukUser(body);
+        return await webAppResponse(res, result, "", "Master Data", WEBMESSAGES.GET_ALLDATA, "userid", "role");
+    } catch (error) {
+        return await webAppResponse(res, error);
+    }
+});
+
+adminRouter.post('/getDisAndTalukAssignedData', async (req, res) => {
+    try {
+        let body = req.body;
+       let result = await adminServices.getDisAndTalukAssignedData(body);
+        return await webAppResponse(res, result, "", "Master Data", WEBMESSAGES.GET_ALLDATA, "userid", "role");
+    } catch (error) {
+        return await webAppResponse(res, error);
+    }
+});
+
 adminRouter.post('/addRefractionist', async (req, res) => {
     try {
         let body = req.body;
@@ -74,10 +102,10 @@ adminRouter.post('/modifyRefractionist', async (req, res) => {
     }
 });
 
-adminRouter.post('/getGruhaLlakshmiReports', async (req, res) => {
+adminRouter.post('/getGruhaLakshmiReports', async (req, res) => {
     try {
         let body = req.body;
-        let result = await adminServices.getGruhaLlakshmiReports(body);
+        let result = await adminServices.getGruhaLakshmiReports(body);
         return await webAppResponseForLarge(res, result, "", "getGruhaLlakshmiReports", WEBMESSAGES.GET_ALLDATA, "userid", "role");
     } catch (error) {
         return await webAppResponse(res, error);
@@ -119,6 +147,26 @@ adminRouter.post('/getShakthiReports', async (req, res) => {
         let body = req.body;
         let result = await adminServices.getShakthiReports(body);
         return await webAppResponseForLarge(res, result, "", "getShakthiReports", WEBMESSAGES.GET_ALLDATA, "userid", "role");
+    } catch (error) {
+        return await webAppResponse(res, error);
+    }
+});
+
+adminRouter.post('/getDistinctTaluk', async (req, res) => {
+    try {
+        let body = req.body;
+        let result = await adminServices.getDistinctTaluk(body);
+        return await webAppResponseForLarge(res, result, "", "getDistinctTaluk", WEBMESSAGES.GET_ALLDATA, "userid", "role");
+    } catch (error) {
+        return await webAppResponse(res, error);
+    }
+});
+
+adminRouter.post('/getDistinctSubCenter', async (req, res) => {
+    try {
+        let body = req.body;
+        let result = await adminServices.getDistinctSubCenter(body);
+        return await webAppResponseForLarge(res, result, "", "getDistinctSubCenter", WEBMESSAGES.GET_ALLDATA, "userid", "role");
     } catch (error) {
         return await webAppResponse(res, error);
     }

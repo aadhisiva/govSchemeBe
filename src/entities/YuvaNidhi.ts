@@ -18,22 +18,22 @@ import {
     Name: string;
 
     @Column({type: 'nvarchar', length: 20, default: null})
+    Mobile: string;
+
+    @Column({type: 'nvarchar', length: 20, default: null})
+    YNRegisteredMobile: string;
+
+    @Column({type: 'nvarchar', length: 20, default: null})
     UserId: string;
     
     @Column({type: 'nvarchar', length: 20, default: null})
-    Relationship: string;
+    RelationShip: string;
     
     @Column({type: 'nvarchar', length: 20, default: null})
     Gender: string;
     
     @Column({type: 'nvarchar', length: 50, default: null})
     MemberId: string;
-    
-    @Column({type: 'nvarchar', length: 20, default: null})
-    GL_Flag: string;
-  
-    @Column({type: 'nvarchar', length: 20, default: null})
-    GJ_Flag: string;
   
     @Column({type: 'nvarchar', length: 20, default: null})
     YN_Flag: string;
@@ -58,6 +58,9 @@ import {
   
     @Column({type: 'nvarchar', length: 20, default: null})
     SurveyStatus: string;
+  
+    @Column({type: 'nvarchar', length: 20, default: null})
+    SurveyMode: string;
   
     @Column({type: 'nvarchar', length: 50, default: null})
     CreatedBy: string;

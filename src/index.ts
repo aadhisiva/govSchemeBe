@@ -34,7 +34,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // cors setup for communication of sever and client
-app.use(cors({ origin: ['http://103.138.197.190', 'http://localhost', 'http://10.10.40.249'] }));
+app.use(cors({ origin: ['http://103.138.197.190', 'http://localhost:8080', 'http://10.10.40.249'] }));
 
 //setting req headers and res headers 
 app.use(function (req, res, next) {
@@ -44,7 +44,7 @@ app.use(function (req, res, next) {
   res.setHeader("strict-transport-security", "max-age=63072000; includeSubdomains; preload");
   res.setHeader('Content-Security-Policy', '<policy-directive>; <policy-directive>')
   next();
-})
+});
 
 // create for logs śad
 app.use(morgan('common', {

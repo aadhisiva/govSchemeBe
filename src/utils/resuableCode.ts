@@ -1,8 +1,12 @@
 import { AppDataSource } from "../db/config";
-import { MobileLogs, OtpLogs, webLogs, RefractionistLogin } from "../entities";
+import { MobileLogs, OtpLogs, RefractionistLogin, webLogs } from "../entities";
 import cryptoJs from "crypto";
 import Logger from "../loggers/winstonLogger";
 import { KutumbaData } from "../entities/KutumbaData";
+
+
+// const mobileLogsRepo = AppDataSource.getRepository(MobileLogs);
+const otpLogsRepo = AppDataSource.getRepository(OtpLogs);
 
 // generate random string
 export const generateRandomString = (RequiredLength) => {
@@ -49,19 +53,7 @@ export function generateUniqueId() {
 // generate sequence wise id
 export const incrementGenerator = async () => {
   try {
-    let defaultString = 'GS';
-    let findString = await AppDataSource.getRepository(RefractionistLogin).find({
-      order: {
-        UserId: 'DESC'
-      },
-      take: 1
-    });
-    if (!findString[0]) {
-      return `${defaultString}1`;
-    } else {
-      let aa = findString[0]?.UserId.split(defaultString)[1];
-      return `${defaultString}${+aa + 1}`
-    }
+    return `GS${generateUniqueId()}`;
   } catch (e) {
     return e;
   }
@@ -72,6 +64,7 @@ export const incrementGenerator = async () => {
 // };
 
 export const saveWebLogs = async (WebPage, Message, UserId, Request, Response, Role, ResponseType) => {
+  const webLogsRepo = AppDataSource.getRepository(webLogs);
   // generate time
   let newBody = {
     WebPage,
@@ -82,21 +75,27 @@ export const saveWebLogs = async (WebPage, Message, UserId, Request, Response, R
     Response: JSON.stringify(Response),
     ResponseType
   }
-  return await AppDataSource.getRepository(webLogs).save(newBody);
+   await webLogsRepo.save(newBody);
+   return null;
 };
 
 export const saveMobileLogs = async (logMessage, apiMessage, UserId, Request, Response, Role, ResponseType) => {
+  try{
+  const mobileLogsRepo = AppDataSource.getRepository(MobileLogs);
   // generate time
-  let newBody = {
-    logMessage,
-    apiMessage,
-    UserId,
-    Role,
-    Request: JSON.stringify(Request),
-    Response: JSON.stringify(Response),
-    ResponseType
-  }
-  return await AppDataSource.getRepository(MobileLogs).save(newBody);
+  let data = new MobileLogs();
+  data.logMessage = logMessage;
+    data.apiMessage = apiMessage;
+    data.apiMessage = apiMessage;
+    data.UserId = UserId;
+    data.Request= JSON.stringify(Request);
+    data.Response= JSON.stringify(Response);
+    data.ResponseType = ResponseType;
+   await mobileLogsRepo.save(data);
+   return null;
+} catch(e){
+  Logger.error(e)
+}
 };
 
 export const getRoleAndUserId = (req, message) => {
@@ -114,27 +113,59 @@ export const saveMobileOtps = async (Mobile, text, response, UserId = '', otp) =
   let newBody = {
     otp,
     Mobile,
-    Message: text,
+    Message: JSON.stringify(text),
     Response: JSON.stringify(response),
     UserId
   }
-  return await AppDataSource.getRepository(OtpLogs).save(newBody);
+  return await otpLogsRepo.save(newBody);
 };
 
 export const assignKutumaToTableFormate = (actualData) => {
   let data = new KutumbaData();
   data.Name = actualData.MEMBER_NAME_ENG || null;
-  data.Age = actualData.Age || null;
   data.Gender = actualData.MBR_GENDER || null;
-  data.Dob = actualData.Dob || null;
-  data.RelationShip = actualData.RelationShip || null;
+  data.Dob = actualData.MBR_DOB || null;
+  data.RelationShip = actualData.RELATION_NAME || null;
   data.RcNo = actualData.RC_NUMBER || null;
   data.GJ_Flag = actualData.GJ_FLAG || null;
   data.GL_Flag = actualData.GL_FLAG || null;
-  data.YN_Flag = actualData.GL_FLAG || null;
+  data.YN_Flag = actualData.YN_FLAG || null;
+  data.AB_Flag = actualData.AB_FLAG || null;
   data.MemberId = actualData.MEMBER_ID || null;
   data.KutumbaIdStatus = actualData.Kutumba_ID_status || null;
   return data;
+};
+
+export const getAgeFromBirthDateMultipleScenario = (dob) => {
+  let currentDate: any = new Date();
+  let [dayM, monM, yearM] = dob.split("/");
+  if(dayM){
+    if(dayM.length > 2){
+      let [year, mon, day] = dob.split("/");
+      let originDate: any = new Date(`"${mon + "/" + day + "/" + year}"`);
+      var milliDay = 1000 * 60 * 60 * 24 // a day in milliseconds;
+      let age = Math.floor(((currentDate - originDate) / milliDay) / 365);
+      return age;
+    }
+    let originDate: any = new Date(`"${monM + "/" + dayM + "/" + yearM}"`);
+    var milliDay = 1000 * 60 * 60 * 24 // a day in milliseconds;
+    let age = Math.floor(((currentDate - originDate) / milliDay) / 365);
+    return age;
+  } else {
+    let [dayS, monS, yearS] = dob.split("-");
+    if(dayS.length > 2){
+      let [year, mon, day] = dob.split("-");
+      let originDate: any = new Date(`"${mon + "/" + day + "/" + year}"`);
+      var milliDay = 1000 * 60 * 60 * 24 // a day in milliseconds;
+      let age = Math.floor(((currentDate - originDate) / milliDay) / 365);
+      return age;
+    } else{
+      let originDate: any = new Date(`"${monS + "/" + dayS + "/" + yearS}"`);
+      var milliDay = 1000 * 60 * 60 * 24 // a day in milliseconds;
+      let age = Math.floor(((currentDate - originDate) / milliDay) / 365);
+      return age;
+    }
+  }
 };
 
 // convert aadhar no to hash for getting details from kutumba

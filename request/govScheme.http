@@ -1,0 +1,87 @@
+@ProUrl = http://gss.karnataka.gov.in/GuranteeScheme/user/
+@LocalUrl= http://localhost:8886/GuranteeScheme/user/
+POST {{ProUrl}}sendOtpForTest
+content-type: application/json
+
+{
+    "Mobile": "9999999999"
+}
+
+###
+@LocalUrl= http://localhost:8886/GuranteeScheme/user/
+POST {{ProUrl}}sendOtpForTest
+content-type: application/json
+
+{
+    "Mobile": "9999999999"
+}
+
+###
+POST {{ProUrl}}otpVerifyForTest
+content-type: application/json
+
+{
+    "Mobile": "9999999999",
+    "Otp":"554433"
+}
+
+###
+POST {{ProUrl}}saveSurveyDataForTest
+content-type: application/json
+
+{
+    "MemberId": "3243534",
+    "RcNo": "2132342534",
+    "GruhaLakshmi": {
+        "GL1": "gaurantee1",
+        "GL2": "Television,Fridge",
+        "GL3": "gaurantee1",
+        "GL4": "Television,Fridge",
+        "GL5": "gaurantee1",
+        "GL6": "gaurantee1"
+    },
+    "GruhaJyothi": {
+        "GJ1": "gaurantee1",
+        "GJ2": "gaurantee1",
+        "GJ3": "To buy more grains,General household expenditure",
+        "GJ4": "gaurantee1",
+        "GJ5": "gaurantee1",
+        "GJ6": "gaurantee1"
+    },
+    "AnnaBhagya": {
+        "AB1": "gaurantee1",
+        "AB2": "gaurantee1",
+        "AB3": "gaurantee1",
+        "AB4": "gaurantee1",
+        "AB5": "gaurantee1",
+        "AB6": "gaurantee1"
+    },
+    "ShakthiScheme": {
+        "SS1": "gaurantee1",
+        "SS2": "gaurantee1",
+        "SS3": "gaurantee1",
+        "SS4": "gaurantee1",
+        "SS5": "gaurantee1"
+    },
+    "Yuvanidhi": {
+        "YN1": "gaurantee1",
+        "YN2": "gaurantee1",
+        "YN3": "gaurantee1",
+        "YN4": "gaurantee1"
+    }
+}
+
+###
+POST {{ProUrl}}saveSurveyLocationForTest
+content-type: application/json
+
+{
+    "MemberId": "6546231",
+    "RcNo": "13134343",
+    "Latitude": "4543.345",
+    "Longitude": "4354.345",
+    "LocationName": "345.345",
+    "Photo": "345.345"
+}
+
+###

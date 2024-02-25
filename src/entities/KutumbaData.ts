@@ -29,7 +29,7 @@ import {
     @Column({ type: 'nvarchar', length: 10, default: null})
     Gender: string;
   
-    @Column({ type: 'nvarchar', length: 20, default: null})
+    @Column({ type: 'text', default: null})
     Dob: string;
   
     @Column({ type: 'nvarchar', length: 20, default: null})
@@ -44,7 +44,10 @@ import {
     @Column({type: 'nvarchar', length: 20, default: null})
     YN_Flag: string;
   
-    @Column({ type: 'nvarchar', length: 10, default: null})
+    @Column({type: 'nvarchar', length: 20, default: null})
+    AB_Flag: string;
+  
+    @Column({ type: 'text', default: null})
     KutumbaIdStatus: string;
   
     @Column({ type: 'nvarchar', length: 50, default: null})

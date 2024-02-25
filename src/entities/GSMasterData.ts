@@ -16,6 +16,9 @@ import {
     
     @Column({type: 'nvarchar', length: 'max', default: null})
     SubCenterCode: string;
+    
+    @Column({type: 'nvarchar', length: 'max', default: null})
+    PHCCode: string;
   
     @Column({type: 'nvarchar', length: 'max', default: null})
     SubCenterName: string;
@@ -25,6 +28,9 @@ import {
     
     @Column({type: 'nvarchar', length: 'max', default: null})
     DistrictCode: string;
+    
+    @Column({type: 'nvarchar', length: 'max', default: null})
+    TokenExpirationTime: string;
     
     @Column({type: 'nvarchar', length: 'max', default: null})
     DistrictName: string;

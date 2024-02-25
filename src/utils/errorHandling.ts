@@ -3,7 +3,7 @@ import { saveMobileLogs, saveWebLogs } from "./resuableCode";
 import { RESPONSEMSG, RESPONSE_EMPTY_DATA, ResponseCode, ResponseMessages } from "./statusCodes";
 
 export const mobileAppResponse = async (res, result, body = {}, logRes={userId: '', role: '', logMessage: ''}) => {
-    const { code, message, data } = result;
+    const { code=200, message, data } = result || {};
     const { userId, role, logMessage } = logRes;
     if (result instanceof Error) {
         await saveMobileLogs(logMessage, message, userId, body, result, role, RESPONSETYPE.FAILED)
@@ -28,7 +28,7 @@ export const mobileAppResponse = async (res, result, body = {}, logRes={userId: 
 };
 
 export const mobileAppResponseForLarge = async (res, result, body = {}, logRes={userId: '', role: '', logMessage: ''}) => {
-    const { code, message, data } = result;
+    const { code=200, message, data } = result || {};
     const { userId, role, logMessage } = logRes;
     if (result instanceof Error) {
         await saveMobileLogs(logMessage, message, userId, body, result, role, RESPONSETYPE.FAILED)
@@ -53,7 +53,7 @@ export const mobileAppResponseForLarge = async (res, result, body = {}, logRes={
 };
 
 export const webAppResponseForLarge = async (res, result, body = {}, page = '', msg = '', userid = '', role = '') => {
-    const { code, message, data } = result;
+    const { code =200, message, data } = result || {};
     if (result instanceof Error) {
         await saveWebLogs(page, msg, userid, body, result, role, RESPONSETYPE.FAILED)
         return res.status(500).send(ResponseMessages(ResponseCode.EXCEPTION, (message || RESPONSEMSG.EXCEPTION), RESPONSE_EMPTY_DATA));
@@ -77,7 +77,7 @@ export const webAppResponseForLarge = async (res, result, body = {}, page = '', 
 };
 
 export const webAppResponse = async (res, result, body = {}, page = '', msg = '', userid = '', role = '') => {
-    const { code, message, data } = result;
+    const { code=200, message, data } = result || {};
     if (result instanceof Error) {
         await saveWebLogs(page, msg, userid, body, result, role, RESPONSETYPE.FAILED)
         return res.status(500).send(ResponseMessages(ResponseCode.EXCEPTION, (message || RESPONSEMSG.EXCEPTION), RESPONSE_EMPTY_DATA));

@@ -13,4 +13,7 @@ export * from "./GruhaJyothi";
 export * from "./PersonLocation";
 export * from "./GSMasterData";
 export * from "./admin";
+export * from "./DistrictAssign";
+export * from "./TakukAssign";
+export * from "./PhcoAssign";
 

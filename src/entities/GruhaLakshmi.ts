@@ -19,9 +19,12 @@ export class GruhaLakshmi {
 
   @Column({type: 'nvarchar', length: 20, default: null})
   UserId: string;
+
+  @Column({type: 'nvarchar', length: 20, default: null})
+  Mobile: string;
   
   @Column({type: 'nvarchar', length: 20, default: null})
-  Relationship: string;
+  RelationShip: string;
   
   @Column({type: 'nvarchar', length: 20, default: null})
   Gender: string;
@@ -31,12 +34,6 @@ export class GruhaLakshmi {
   
   @Column({type: 'nvarchar', length: 20, default: null})
   GL_Flag: string;
-
-  @Column({type: 'nvarchar', length: 20, default: null})
-  GJ_Flag: string;
-
-  @Column({type: 'nvarchar', length: 20, default: null})
-  YN_Flag: string;
 
   @Column({type: 'nvarchar', length: 20, default: null})
   Dob: string;
@@ -62,8 +59,20 @@ export class GruhaLakshmi {
   @Column({type: 'nvarchar', length: 'max', default: null})
   GL6: string;
 
+  @Column({type: 'nvarchar', length: 'max', default: null})
+  GL7: string;
+
+  @Column({type: 'nvarchar', length: 'max', default: null})
+  GL8: string;
+
+  @Column({type: 'nvarchar', length: 'max', default: null})
+  GL9: string;
+
   @Column({type: 'nvarchar', length: 20, default: null})
   SurveyStatus: string;
+
+  @Column({type: 'nvarchar', length: 20, default: null})
+  SurveyMode: string;
 
   @Column({type: 'nvarchar', length: 50, default: null})
   CreatedBy: string;

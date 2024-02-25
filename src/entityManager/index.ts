@@ -1,11 +1,12 @@
 import {
     AdminData,
     AnnaBhagya,
+    DistrictAssign,
     GSMasterData,
     GruhaJyothi,
     GruhaLakshmi,
     KutumbaData,
-    MobileLogs,OtpLogs, PersonLocation, RefractionistLogin, Shakthi, Version, YuvaNidhi, webLogs
+    MobileLogs,OtpLogs, PersonLocation, PhcoAssign, RefractionistLogin, Shakthi, TalukAssign, Version, YuvaNidhi, webLogs
 } from "../entities"
 
 
@@ -24,6 +25,9 @@ export const entities = () => {
         KutumbaData,
         PersonLocation,
         GSMasterData,
-        AdminData
+        AdminData,
+        TalukAssign,
+        DistrictAssign,
+        PhcoAssign
     ];
 };

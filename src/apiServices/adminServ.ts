@@ -15,12 +15,18 @@ export class AdminServices {
 
     async webLogin(data) {
         const { Role, Mobile } = data;
+        if (!Role) return alert("Please Provide Role.");
+        data.Otp = generateOTP(4);
+        data.Token = generateRandomString(40);
+        data.TokenExpirationTime = generateEOfTTime();
         if (Role == ROLES.SUPER_ADMIN) {
-            data.otp = generateOTP(4);
-            data.Token = generateRandomString(40);
-            data.TokenExpirationTime = generateEOfTTime();
+            delete data?.Role;
             let result = await this.adminRepo.checkLoginUser(data);
             if (result?.code) return { code: 404, message: "User Not Exists." }
+            delete result?.CreatedDate;
+            delete result?.UpdatedDate;
+            result.Role = Role;
+            result.loginRole = 'Super Admin';
             let sendSingleSms = await this.otpServices.sendSmsInKannadaUnicode(Mobile, data?.Otp);
             await saveMobileOtps(Mobile, sendSingleSms?.otpMessage, sendSingleSms?.response, data?.UserId, data?.Otp);
             if (sendSingleSms.code !== 200) {
@@ -28,12 +34,80 @@ export class AdminServices {
             }
             return result;
             // return await this.adminRepo.loginToSuperAdmin(result);
+        } else if (Role === ROLES.DISTRICT_OFFICER) {
+            delete data?.Role;
+            let result = await this.adminRepo.checkDistrictUser(data);
+            if (result?.code) return { code: 404, message: "User Not Exists." };
+            delete result?.CreatedDate;
+            delete result?.UpdatedDate;
+            result.loginCode = result?.DistrictCode;
+            result.loginRole = result?.Role;
+            result.Role = Role;
+            let sendSingleSms = await this.otpServices.sendSmsInKannadaUnicode(Mobile, data?.Otp);
+            await saveMobileOtps(Mobile, sendSingleSms?.otpMessage, sendSingleSms?.response, data?.UserId, data?.Otp);
+            if (sendSingleSms.code !== 200) {
+                return { code: 422, message: RESPONSEMSG.OTP_FAILED };
+            }
+            return result;
+        } else if (Role === ROLES.TALUK_OFFICER) {
+            delete data?.Role;
+            let result = await this.adminRepo.checkTalukUser(data);
+            if (result?.code) return { code: 404, message: "User Not Exists." };
+            delete result?.CreatedDate;
+            delete result?.UpdatedDate;
+            result.loginRole = result?.Role;
+            result.loginCode = result?.TalukOrTownCode;
+            result.Role = Role;
+            let sendSingleSms = await this.otpServices.sendSmsInKannadaUnicode(Mobile, data?.Otp);
+            await saveMobileOtps(Mobile, sendSingleSms?.otpMessage, sendSingleSms?.response, data?.UserId, data?.Otp);
+            if (sendSingleSms.code !== 200) {
+                return { code: 422, message: RESPONSEMSG.OTP_FAILED };
+            }
+            return result;
+        } else if (Role === ROLES.PHCO_OFFICER) {
+            delete data?.Role;
+            let result = await this.adminRepo.checkPhcUser(data);
+            if (result?.code) return { code: 404, message: "User Not Exists." };
+            delete result?.CreatedDate;
+            delete result?.UpdatedDate;
+            result.loginCode = result?.PHCCode;
+            result.Role = Role;
+            let sendSingleSms = await this.otpServices.sendSmsInKannadaUnicode(Mobile, data?.Otp);
+            await saveMobileOtps(Mobile, sendSingleSms?.otpMessage, sendSingleSms?.response, data?.UserId, data?.Otp);
+            if (sendSingleSms.code !== 200) {
+                return { code: 422, message: RESPONSEMSG.OTP_FAILED };
+            }
+            return result;
+        } else {
+            return {code: 400, message: 'Role Not Found'};
         }
         // return this.adminRepo.webLogin(data);
     }
 
     async getAllAssignedUsers() {
         return this.adminRepo.getAllAssignedUsers();
+    }
+    async getDashBoardCounts(data) {
+        return this.adminRepo.getDashBoardCounts(data);
+    }
+
+    async addDistrictAndTalukUser(data) {
+        const { type } = data;
+        if (type == "DO") {
+            return this.adminRepo.assignToDistrict(data);
+        } else if (type == "PO") {
+            return this.adminRepo.assignToPhc(data);
+        } else if (type == "TO") {
+            return this.adminRepo.assignToTaluk(data)
+        } else if (type == "SO") {
+            return this.adminRepo.assignToSubCenter(data)
+        } else {
+            return [];
+        }
+    }
+
+    async getDisAndTalukAssignedData(data) {
+        return this.adminRepo.getDisAndTalukAssignedData(data);
     }
 
     async getMasterData() {
@@ -49,8 +123,8 @@ export class AdminServices {
         return this.adminRepo.modifyRefractionist(data);
     }
 
-    async getGruhaLlakshmiReports(data) {
-        return this.adminRepo.getGruhaLlakshmiReports(data);
+    async getGruhaLakshmiReports(data) {
+        return this.adminRepo.getGruhaLakshmiReports(data);
     }
 
     async getGruhaLJyothiReports(data) {
@@ -67,5 +141,13 @@ export class AdminServices {
 
     async getShakthiReports(data) {
         return this.adminRepo.getShakthiReports(data);
+    }
+
+    async getDistinctTaluk(data) {
+        return this.adminRepo.getDistinctTaluk(data);
+    }
+
+    async getDistinctSubCenter(data) {
+        return this.adminRepo.getDistinctSubCenter(data);
     }
 }

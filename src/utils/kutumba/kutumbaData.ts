@@ -45,14 +45,6 @@ export const fetchDataFromKutumba = async (data) => {
             }
         } else {
             return response.data;
-            /* 
-getUserDetails {
-  StatusCode: -4,
-  StatusText: 'Kindly pass at least one input parameter.',
-  Response_ID: '03022024110835078733464',
-  Request_ID: '0123456789',
-  ResultDataList: ''
-} */
         }
     } catch (e) {
         Logger.error("[ *********** getFamilyAdDataFromKutumba ************* ]", e);
