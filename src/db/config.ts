@@ -22,9 +22,14 @@ export const AppDataSource= new DataSource({
   database: process.env.PRO_DB_DATABASE,
   entities: entities(),
   logging: false,
-  synchronize: true,
+  synchronize: false,
   options: {
       encrypt: false
+  },
+  pool: {
+    max: 10,
+    min: 0,
+    idleTimeoutMillis: 3000
   }
 });
 

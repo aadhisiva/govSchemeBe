@@ -1,33 +1,35 @@
 import { Container } from 'typedi';
 import express from "express";
-import { mobileAppResponse, webAppResponse, webAppResponseForLarge } from '../utils/errorHandling';
+import { webAppResponse, webAppResponseForLarge } from '../utils/errorHandling';
 import { AdminServices } from '../apiServices/adminServ';
 import { WEBMESSAGES } from '../utils/constants';
-import { AppDataSource } from '../db/config';
-import { GSMasterData } from '../entities';
+// import { AppDataSource } from '../db/config';
+// import { GSMasterData } from '../entities';
+import fs from 'fs';
 import { data } from "../dummy";
+// import { generateUniqueId } from '../utils/resuableCode';
 
 
 const adminRouter = express.Router()
 
 const adminServices = Container.get(AdminServices);
 
-adminRouter.post('/addMasterData', async (req, res) => {
-    try {
-        for(let i=0; i < (data.length || 0); i++){
-            let eachrow: any = data[i];
-            await AppDataSource.getRepository(GSMasterData).save(eachrow)
-        }
-        res.send("result")
-    } catch (error) {
-        return await mobileAppResponse(res, error);
-    }
-});
+// adminRouter.post('/addMasterData', async (req, res) => {
+//     try {
+//         for (let i = 0; i < (data.length || 0); i++) {
+//             let eachrow: any = data[i];
+//             await AppDataSource.getRepository(GSMasterData).save(eachrow)
+//         }
+//         res.send("result")
+//     } catch (error) {
+//         return await mobileAppResponse(res, error);
+//     }
+// });
 
 adminRouter.post('/webLogin', async (req, res) => {
     try {
         let body = req.body;
-       let result = await adminServices.webLogin(body);
+        let result = await adminServices.webLogin(body);
         return await webAppResponse(res, result, "", "Master Data", WEBMESSAGES.GET_ALLDATA, "userid", "role");
     } catch (error) {
         return await webAppResponse(res, error);
@@ -36,7 +38,7 @@ adminRouter.post('/webLogin', async (req, res) => {
 
 adminRouter.post('/getAllMasterData', async (req, res) => {
     try {
-       let result = await adminServices.getMasterData();
+        let result = await adminServices.getMasterData();
         return await webAppResponseForLarge(res, result, "", "Master Data", WEBMESSAGES.GET_ALLDATA, "userid", "role");
     } catch (error) {
         return await webAppResponse(res, error);
@@ -45,7 +47,7 @@ adminRouter.post('/getAllMasterData', async (req, res) => {
 
 adminRouter.post('/getAllAssignedUsers', async (req, res) => {
     try {
-       let result = await adminServices.getAllAssignedUsers();
+        let result = await adminServices.getAllAssignedUsers();
         return await webAppResponse(res, result, "", "Master Data", WEBMESSAGES.GET_ALLDATA, "userid", "role");
     } catch (error) {
         return await webAppResponse(res, error);
@@ -55,7 +57,7 @@ adminRouter.post('/getAllAssignedUsers', async (req, res) => {
 adminRouter.post('/getDashBoardCounts', async (req, res) => {
     try {
         let body = req.body;
-       let result = await adminServices.getDashBoardCounts(body);
+        let result = await adminServices.getDashBoardCounts(body);
         return await webAppResponse(res, result, "", "Master Data", WEBMESSAGES.GET_ALLDATA, "userid", "role");
     } catch (error) {
         return await webAppResponse(res, error);
@@ -65,7 +67,7 @@ adminRouter.post('/getDashBoardCounts', async (req, res) => {
 adminRouter.post('/addDistrictAndTalukUser', async (req, res) => {
     try {
         let body = req.body;
-       let result = await adminServices.addDistrictAndTalukUser(body);
+        let result = await adminServices.addDistrictAndTalukUser(body);
         return await webAppResponse(res, result, "", "Master Data", WEBMESSAGES.GET_ALLDATA, "userid", "role");
     } catch (error) {
         return await webAppResponse(res, error);
@@ -75,7 +77,7 @@ adminRouter.post('/addDistrictAndTalukUser', async (req, res) => {
 adminRouter.post('/getDisAndTalukAssignedData', async (req, res) => {
     try {
         let body = req.body;
-       let result = await adminServices.getDisAndTalukAssignedData(body);
+        let result = await adminServices.getDisAndTalukAssignedData(body);
         return await webAppResponse(res, result, "", "Master Data", WEBMESSAGES.GET_ALLDATA, "userid", "role");
     } catch (error) {
         return await webAppResponse(res, error);
@@ -102,51 +104,21 @@ adminRouter.post('/modifyRefractionist', async (req, res) => {
     }
 });
 
-adminRouter.post('/getGruhaLakshmiReports', async (req, res) => {
+adminRouter.post('/getEachSchemeCountForWebReports', async (req, res) => {
     try {
         let body = req.body;
-        let result = await adminServices.getGruhaLakshmiReports(body);
-        return await webAppResponseForLarge(res, result, "", "getGruhaLlakshmiReports", WEBMESSAGES.GET_ALLDATA, "userid", "role");
+        let result = await adminServices.getEachSchemeCountForWebReports(body);
+        return await webAppResponseForLarge(res, result, "", "getEachSchemeCountForWebReports", WEBMESSAGES.GET_ALLDATA, "userid", "role");
     } catch (error) {
         return await webAppResponse(res, error);
     }
 });
 
-adminRouter.post('/getGruhaLJyothiReports', async (req, res) => {
+adminRouter.post('/getCountsOfDistrictAndTaluk', async (req, res) => {
     try {
         let body = req.body;
-        let result = await adminServices.getGruhaLJyothiReports(body);
-        return await webAppResponseForLarge(res, result, "", "getGruhaLJyothiReports", WEBMESSAGES.GET_ALLDATA, "userid", "role");
-    } catch (error) {
-        return await webAppResponse(res, error);
-    }
-});
-
-adminRouter.post('/getAnnaBhagyaReports', async (req, res) => {
-    try {
-        let body = req.body;
-        let result = await adminServices.getAnnaBhagyaReports(body);
-        return await webAppResponseForLarge(res, result, "", "getAnnaBhagyaReports", WEBMESSAGES.GET_ALLDATA, "userid", "role");
-    } catch (error) {
-        return await webAppResponse(res, error);
-    }
-});
-
-adminRouter.post('/getYuvaNidhiReports', async (req, res) => {
-    try {
-        let body = req.body;
-        let result = await adminServices.getYuvaNidhiReports(body);
-        return await webAppResponseForLarge(res, result, "", "getYuvaNidhiReports", WEBMESSAGES.GET_ALLDATA, "userid", "role");
-    } catch (error) {
-        return await webAppResponse(res, error);
-    }
-});
-
-adminRouter.post('/getShakthiReports', async (req, res) => {
-    try {
-        let body = req.body;
-        let result = await adminServices.getShakthiReports(body);
-        return await webAppResponseForLarge(res, result, "", "getShakthiReports", WEBMESSAGES.GET_ALLDATA, "userid", "role");
+        let result = await adminServices.getCountsOfDistrictAndTaluk(body);
+        return await webAppResponseForLarge(res, result, "", "getEachSchemeCountForWebReports", WEBMESSAGES.GET_ALLDATA, "userid", "role");
     } catch (error) {
         return await webAppResponse(res, error);
     }
@@ -167,6 +139,32 @@ adminRouter.post('/getDistinctSubCenter', async (req, res) => {
         let body = req.body;
         let result = await adminServices.getDistinctSubCenter(body);
         return await webAppResponseForLarge(res, result, "", "getDistinctSubCenter", WEBMESSAGES.GET_ALLDATA, "userid", "role");
+    } catch (error) {
+        return await webAppResponse(res, error);
+    }
+});
+
+adminRouter.post('/createSheetMasterDataWsie', async (req, res) => {
+    try {
+        for (let i = 0; i < data.length; i++) {
+            let eachRow = data[i];
+            let query = `INSERT [dbo].[GSMasterData] ([PHCName], [SubCenterCode], [SubCenterName], [Type], [DistrictCode], [DistrictName], [TalukOrTownCode], [TalukOrTownName], [PHCCode]) VALUES ('${eachRow.PHCName}','${eachRow.SubCenterCode}' , '${eachRow.SubCenterName}', 'Urban', '${eachRow.DistrictCode}', '${eachRow.DistrictName}', '${eachRow.TalukOrTownCode}', '${eachRow.TalukOrTownName}','${eachRow.PHCCode}')`
+            let logger = fs.createWriteStream('sql.txt', {
+                flags: 'a' // 'a' means appending (old data will be preserved)
+            })
+            logger.write(`\n${query}`);
+        }
+        // for (let i = 0; i < data.length; i++) {
+        //     let eachRow = data[i];
+        //     // let id =   `${String(generateUniqueId())}${i+1}`
+        //     let query = `UPDATE PhcoAssign set Role='${eachRow.Role}', PHCCode='${eachRow.PHCCode}', CreatedBy='${eachRow.PHCRole}' where Mobile='${eachRow.Mobile}'`
+        //     let logger = fs.createWriteStream('updatePhc.txt', {
+        //         flags: 'a' // 'a' means appending (old data will be preserved)
+        //     })
+        //     logger.write(`\n${query}`);
+        // }
+        res.send("Written in sql.text file.")
+
     } catch (error) {
         return await webAppResponse(res, error);
     }

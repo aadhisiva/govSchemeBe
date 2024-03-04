@@ -70,6 +70,7 @@ export class AdminServices {
             if (result?.code) return { code: 404, message: "User Not Exists." };
             delete result?.CreatedDate;
             delete result?.UpdatedDate;
+            result.loginRole = result?.Role;
             result.loginCode = result?.PHCCode;
             result.Role = Role;
             let sendSingleSms = await this.otpServices.sendSmsInKannadaUnicode(Mobile, data?.Otp);
@@ -123,26 +124,13 @@ export class AdminServices {
         return this.adminRepo.modifyRefractionist(data);
     }
 
-    async getGruhaLakshmiReports(data) {
-        return this.adminRepo.getGruhaLakshmiReports(data);
+    async getEachSchemeCountForWebReports(data) {
+        return this.adminRepo.getEachSchemeCountForWebReports(data);
     }
 
-    async getGruhaLJyothiReports(data) {
-        return this.adminRepo.getGruhaLJyothiReports(data);
+    async getCountsOfDistrictAndTaluk(data) {
+        return this.adminRepo.getCountsOfDistrictAndTaluk(data);
     }
-
-    async getAnnaBhagyaReports(data) {
-        return this.adminRepo.getAnnaBhagyaReports(data);
-    }
-
-    async getYuvaNidhiReports(data) {
-        return this.adminRepo.getYuvaNidhiReports(data);
-    }
-
-    async getShakthiReports(data) {
-        return this.adminRepo.getShakthiReports(data);
-    }
-
     async getDistinctTaluk(data) {
         return this.adminRepo.getDistinctTaluk(data);
     }

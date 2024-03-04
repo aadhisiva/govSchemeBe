@@ -12,6 +12,7 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import fs from "fs";
 import cors from "cors";
+import compression from "compression";
 import { AppDataSource } from './db/config';
 import Logger from './loggers/winstonLogger';
 
@@ -34,7 +35,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // cors setup for communication of sever and client
-app.use(cors({ origin: ['http://103.138.197.190', 'http://localhost:8080', 'http://10.10.40.249'] }));
+app.use(cors({ origin: ['http://103.138.197.190', 'http://localhost:8080', 'http://10.10.40.249', 'http://gss.karnataka.gov.in', 'https://gss.karnataka.gov.in'] }));
 
 //setting req headers and res headers 
 app.use(function (req, res, next) {
@@ -52,23 +53,27 @@ app.use(morgan('common', {
 }));
 
 app.use(morgan('dev'));
+app.use(compression())
 
-AppDataSource.initialize().then(async (connection) => {
-  Logger.info(`⚡️[Database]: Database connected....+++++++ ${port}`);
-}).catch(error => {
-  Logger.error("connection error :::::::", error);
-  throw new Error("new Connection ERROR " + JSON.stringify(error));
-})
+app.get('/init', (req, res) => {
+  // Perform any initialization logic here
+  console.log('Application initialized');
 
-app.get("/GuranteeScheme/run", (req, res) => {
-  res.send("running")
-})
+  res.status(200).send('Initialization complete');
+});
 
 // controllers
 app.use('/GuranteeScheme/user', userRouter);
 app.use('/GuranteeScheme/admin', adminRouter);
 
 // app.listen(port, '192.168.45.170');
-app.listen(port);
+AppDataSource.initialize().then(async (connection) => {
+  app.listen(port, async () => {
+    Logger.info(`⚡️[Database]: Database connected....+++++++ ${port}`);
+  });
+}).catch(error => {
+  Logger.error("connection error :::::::", error);
+  throw new Error("new Connection ERROR " + JSON.stringify(error));
+})
 
 

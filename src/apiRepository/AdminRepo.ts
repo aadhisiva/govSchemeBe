@@ -66,10 +66,10 @@ export class AdminRepo {
    };
 
    async getDashBoardCounts(data) {
-      const {type} = data;
-      // let query =  `exec getDashBoardCounts @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13`;
-      // let result = await AppDataSource.query(query, [type]);
-      return [];
+      const {Role, DistrictCode} = data;
+      let query =  `exec getDashBoardCounts @0,@1`;
+      let result = await AppDataSource.query(query, [Role, DistrictCode]);
+      return result;
    };
 
    async getDisAndTalukAssignedData(data) {
@@ -81,7 +81,7 @@ export class AdminRepo {
    async assignToDistrict(data) {
       const { DistrictCode, Mobile, isNew } = data;
       let checkMobile  = await districtAssignRepo.countBy({Mobile});
-      if(checkMobile && checkMobile > 1) return {code: 400, message: "Already Registered."};
+      if(checkMobile && checkMobile >= 1) return {code: 400, message: "Already Registered."};
       let findData = await districtAssignRepo.findOneBy({DistrictCode, Mobile})
       let newData = {...findData, ...data};
       return await districtAssignRepo.save(newData);
@@ -89,7 +89,7 @@ export class AdminRepo {
    async assignToPhc(data) {
       const { PHCCode, Mobile, isNew } = data;
       let checkMobile  = await phcAssignRepo.countBy({Mobile});
-      if(checkMobile && checkMobile > 1) return {code: 400, message: "Already Registered."};
+      if(checkMobile && checkMobile >= 1) return {code: 400, message: "Already Registered."};
       let findData = await phcAssignRepo.findOneBy({PHCCode, Mobile});
       let newData = {...findData, ...data};
       return await phcAssignRepo.save(newData);
@@ -98,7 +98,7 @@ export class AdminRepo {
    async assignToTaluk(data) {
       const { TalukOrTownCode, Mobile, isNew } = data;
       let checkMobile  = await talukAssignRepo.countBy({Mobile});
-      if(checkMobile && checkMobile > 1) return {code: 400, message: "Already Registered."};
+      if(checkMobile && checkMobile >= 1) return {code: 400, message: "Already Registered."};
       let findData = await talukAssignRepo.findOneBy({TalukOrTownCode, Mobile});
       let newData = {...findData, ...data};
       return await talukAssignRepo.save(newData);
@@ -107,53 +107,16 @@ export class AdminRepo {
    async assignToSubCenter(data) {
       const { Mobile, UserId } = data;
       let checkMobile  = await refractionistRepo.countBy({Mobile});
-      if(checkMobile && checkMobile > 1) return {code: 400, message: "Already Registered."};
+      if(checkMobile && checkMobile >= 1) return {code: 400, message: "Already Registered."};
       let findData = await refractionistRepo.findOneBy({UserId});
       let newData = {...findData, ...data};
       return await refractionistRepo.save(newData);
    };
 
-   async getGruhaLakshmiReports(data) {
-      try{
-      const { FromDate, ToDate } = data;
-      // let getCount = 
-      let query =  `exec getGruhaLakshmiReports @0,@1,@2,@3`;
-      let result = await AppDataSource.query(query, [1, 10, 'id', 222]);
-      return result;
-      } catch(e){
-         console.log("e",e)
-      }
-   };
-
-   async getGruhaLJyothiReports(data) {
-      const { FromDate, ToDate } = data;
-      let query =   `exec getGruhaLJyothiReports @From,@To`;
-      let result = await AppDataSource.query(query, [FromDate, ToDate]);
-      return result;
-   };
-
-   async getAnnaBhagyaReports(data) {
-      const { FromDate, ToDate } = data;
-      let query =   `exec getAnnaBhagyaReports @From,@To`;
-      let result = await AppDataSource.query(query, [FromDate, ToDate]);
-      return result;
-   };
-
-   async getYuvaNidhiReports(data) {
-      const { FromDate, ToDate } = data;
-      let query =   `exec getYuvaNidhiReports @From,@To`;
-      let result = await AppDataSource.query(query, [FromDate, ToDate]);
-      return result;
-   };
-
-   async getShakthiReports(data) {
-      const { FromDate, ToDate } = data;
-      let query =   `exec getShakthiReports @From,@To`;
-      let result = await AppDataSource.query(query, [FromDate, ToDate]);
-      return result;
-   };
-
    async addRefractionist(data) {
+      const { Mobile } = data;
+        let checkMobile  = await refractionistRepo.countBy({Mobile});
+        if(checkMobile && checkMobile >= 1) return {code: 400, message: "Already Registered."};
       return await refractionistRepo.save(data);
    }
 
@@ -162,6 +125,20 @@ export class AdminRepo {
       let findData = await refractionistRepo.findOneBy({UserId});
       let newData = {...findData, ...data};
       return await refractionistRepo.save(newData);
+   }
+
+   async getEachSchemeCountForWebReports(data) {
+      const { Role, DistrictCode} = data;
+      let query = 'exec getEachSchemeCounts @0,@1';
+      let result = await AppDataSource.query(query, [Role, DistrictCode]);
+      return result;
+   }
+
+   async getCountsOfDistrictAndTaluk(data) {
+      const { Role, DistrictCode} = data;
+      let query = 'exec getCountsOfDistrictAndTaluk @0,@1';
+      let result = await AppDataSource.query(query, [Role, DistrictCode]);
+      return result;
    }
 
    async getDistinctTaluk(data) {
