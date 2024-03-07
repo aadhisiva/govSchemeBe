@@ -66,9 +66,9 @@ export class AdminRepo {
    };
 
    async getDashBoardCounts(data) {
-      const {Role, DistrictCode} = data;
+      const {Role, Code} = data;
       let query =  `exec getDashBoardCounts @0,@1`;
-      let result = await AppDataSource.query(query, [Role, DistrictCode]);
+      let result = await AppDataSource.query(query, [Role, Code]);
       return result;
    };
 
@@ -79,7 +79,7 @@ export class AdminRepo {
       return result;
    };
    async assignToDistrict(data) {
-      const { DistrictCode, Mobile, isNew } = data;
+      const { DistrictCode, Mobile } = data;
       let checkMobile  = await districtAssignRepo.countBy({Mobile});
       if(checkMobile && checkMobile >= 1) return {code: 400, message: "Already Registered."};
       let findData = await districtAssignRepo.findOneBy({DistrictCode, Mobile})
@@ -87,7 +87,7 @@ export class AdminRepo {
       return await districtAssignRepo.save(newData);
    };
    async assignToPhc(data) {
-      const { PHCCode, Mobile, isNew } = data;
+      const { PHCCode, Mobile } = data;
       let checkMobile  = await phcAssignRepo.countBy({Mobile});
       if(checkMobile && checkMobile >= 1) return {code: 400, message: "Already Registered."};
       let findData = await phcAssignRepo.findOneBy({PHCCode, Mobile});
@@ -96,7 +96,7 @@ export class AdminRepo {
    };
 
    async assignToTaluk(data) {
-      const { TalukOrTownCode, Mobile, isNew } = data;
+      const { TalukOrTownCode, Mobile } = data;
       let checkMobile  = await talukAssignRepo.countBy({Mobile});
       if(checkMobile && checkMobile >= 1) return {code: 400, message: "Already Registered."};
       let findData = await talukAssignRepo.findOneBy({TalukOrTownCode, Mobile});
@@ -111,6 +111,31 @@ export class AdminRepo {
       let findData = await refractionistRepo.findOneBy({UserId});
       let newData = {...findData, ...data};
       return await refractionistRepo.save(newData);
+   };
+   async assignToDistrictNew(data) {
+      const { Mobile, id } = data;
+      let checkMobile  = await districtAssignRepo.countBy({Mobile});
+      if(checkMobile && checkMobile >= 1) return {code: 400, message: "Already Registered."};
+      let findData = await districtAssignRepo.findOneBy({id})
+      let newData = {...findData, ...data};
+      return await districtAssignRepo.save(newData);
+   };
+   async assignToPhcNew(data) {
+      const { id, Mobile } = data;
+      let checkMobile  = await phcAssignRepo.countBy({Mobile});
+      if(checkMobile && checkMobile >= 1) return {code: 400, message: "Already Registered."};
+      let findData = await phcAssignRepo.findOneBy({id});
+      let newData = {...findData, ...data};
+      return await phcAssignRepo.save(newData);
+   };
+
+   async assignToTalukNew(data) {
+      const { Mobile, id } = data;
+      let checkMobile  = await talukAssignRepo.countBy({Mobile});
+      if(checkMobile && checkMobile >= 1) return {code: 400, message: "Already Registered."};
+      let findData = await talukAssignRepo.findOneBy({id});
+      let newData = {...findData, ...data};
+      return await talukAssignRepo.save(newData);
    };
 
    async addRefractionist(data) {
@@ -127,17 +152,32 @@ export class AdminRepo {
       return await refractionistRepo.save(newData);
    }
 
-   async getEachSchemeCountForWebReports(data) {
-      const { Role, DistrictCode} = data;
-      let query = 'exec getEachSchemeCounts @0,@1';
-      let result = await AppDataSource.query(query, [Role, DistrictCode]);
+   async getEachSchemeCounts(data) {
+      const { Role, Code} = data;
+      let query = 'exec getEachSchemeCountsForAll @0,@1';
+      let result = await AppDataSource.query(query, [Role, Code]);
+      return result;
+   }
+
+   async phcMissingData(data) {
+      const { Role, CreatedByMobile} = data;
+      let query = 'exec phcMissingData @0,@1';
+      let result = await AppDataSource.query(query, [Role, CreatedByMobile]);
+      return result;
+   }
+
+   async updatePhcMissingData(data) {
+      const {id} = data;
+      let findData = await phcAssignRepo.findOneBy({id});
+      let newData = {...findData, ...data};
+      let result = await phcAssignRepo.save(newData);
       return result;
    }
 
    async getCountsOfDistrictAndTaluk(data) {
-      const { Role, DistrictCode} = data;
-      let query = 'exec getCountsOfDistrictAndTaluk @0,@1';
-      let result = await AppDataSource.query(query, [Role, DistrictCode]);
+      const { Role, Code} = data;
+      let query = 'exec getCountsOfDistrictAndTalukForAll @0,@1';
+      let result = await AppDataSource.query(query, [Role, Code]);
       return result;
    }
 

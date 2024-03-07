@@ -107,6 +107,21 @@ export class AdminServices {
         }
     }
 
+    async addOrUpdateAllLogin(data) {
+        const { type } = data;
+        if (type == "DO") {
+            return this.adminRepo.assignToDistrictNew(data);
+        } else if (type == "PO") {
+            return this.adminRepo.assignToPhcNew(data);
+        } else if (type == "TO") {
+            return this.adminRepo.assignToTalukNew(data)
+        } else if (type == "SO") {
+            return this.adminRepo.assignToSubCenter(data)
+        } else {
+            return [];
+        }
+    }
+
     async getDisAndTalukAssignedData(data) {
         return this.adminRepo.getDisAndTalukAssignedData(data);
     }
@@ -124,8 +139,16 @@ export class AdminServices {
         return this.adminRepo.modifyRefractionist(data);
     }
 
-    async getEachSchemeCountForWebReports(data) {
-        return this.adminRepo.getEachSchemeCountForWebReports(data);
+    async getEachSchemeCounts(data) {
+        return this.adminRepo.getEachSchemeCounts(data);
+    }
+
+    async phcMissingData(data) {
+        return this.adminRepo.phcMissingData(data);
+    }
+
+    async updatePhcMissingData(data) {
+        return this.adminRepo.updatePhcMissingData(data);
     }
 
     async getCountsOfDistrictAndTaluk(data) {

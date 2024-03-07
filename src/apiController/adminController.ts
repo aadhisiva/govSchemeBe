@@ -3,28 +3,10 @@ import express from "express";
 import { webAppResponse, webAppResponseForLarge } from '../utils/errorHandling';
 import { AdminServices } from '../apiServices/adminServ';
 import { WEBMESSAGES } from '../utils/constants';
-// import { AppDataSource } from '../db/config';
-// import { GSMasterData } from '../entities';
-import fs from 'fs';
-import { data } from "../dummy";
-// import { generateUniqueId } from '../utils/resuableCode';
-
 
 const adminRouter = express.Router()
 
 const adminServices = Container.get(AdminServices);
-
-// adminRouter.post('/addMasterData', async (req, res) => {
-//     try {
-//         for (let i = 0; i < (data.length || 0); i++) {
-//             let eachrow: any = data[i];
-//             await AppDataSource.getRepository(GSMasterData).save(eachrow)
-//         }
-//         res.send("result")
-//     } catch (error) {
-//         return await mobileAppResponse(res, error);
-//     }
-// });
 
 adminRouter.post('/webLogin', async (req, res) => {
     try {
@@ -74,6 +56,16 @@ adminRouter.post('/addDistrictAndTalukUser', async (req, res) => {
     }
 });
 
+adminRouter.post('/addOrUpdateAllLogin', async (req, res) => {
+    try {
+        let body = req.body;
+        let result = await adminServices.addOrUpdateAllLogin(body);
+        return await webAppResponse(res, result, "", "addOrUpdateAllLogin", WEBMESSAGES.GET_ALLDATA, "userid", "role");
+    } catch (error) {
+        return await webAppResponse(res, error);
+    }
+});
+
 adminRouter.post('/getDisAndTalukAssignedData', async (req, res) => {
     try {
         let body = req.body;
@@ -104,11 +96,31 @@ adminRouter.post('/modifyRefractionist', async (req, res) => {
     }
 });
 
-adminRouter.post('/getEachSchemeCountForWebReports', async (req, res) => {
+adminRouter.post('/getEachSchemeCounts', async (req, res) => {
     try {
         let body = req.body;
-        let result = await adminServices.getEachSchemeCountForWebReports(body);
+        let result = await adminServices.getEachSchemeCounts(body);
         return await webAppResponseForLarge(res, result, "", "getEachSchemeCountForWebReports", WEBMESSAGES.GET_ALLDATA, "userid", "role");
+    } catch (error) {
+        return await webAppResponse(res, error);
+    }
+});
+
+adminRouter.post('/phcMissingData', async (req, res) => {
+    try {
+        let body = req.body;
+        let result = await adminServices.phcMissingData(body);
+        return await webAppResponseForLarge(res, result, "", "phcMissingData", WEBMESSAGES.GET_ALLDATA, "userid", "role");
+    } catch (error) {
+        return await webAppResponse(res, error);
+    }
+});
+
+adminRouter.post('/updatePhcMissingData', async (req, res) => {
+    try {
+        let body = req.body;
+        let result = await adminServices.updatePhcMissingData(body);
+        return await webAppResponseForLarge(res, result, "", "updatePhcMissingData", WEBMESSAGES.GET_ALLDATA, "userid", "role");
     } catch (error) {
         return await webAppResponse(res, error);
     }
@@ -144,31 +156,6 @@ adminRouter.post('/getDistinctSubCenter', async (req, res) => {
     }
 });
 
-adminRouter.post('/createSheetMasterDataWsie', async (req, res) => {
-    try {
-        for (let i = 0; i < data.length; i++) {
-            let eachRow = data[i];
-            let query = `INSERT [dbo].[GSMasterData] ([PHCName], [SubCenterCode], [SubCenterName], [Type], [DistrictCode], [DistrictName], [TalukOrTownCode], [TalukOrTownName], [PHCCode]) VALUES ('${eachRow.PHCName}','${eachRow.SubCenterCode}' , '${eachRow.SubCenterName}', 'Urban', '${eachRow.DistrictCode}', '${eachRow.DistrictName}', '${eachRow.TalukOrTownCode}', '${eachRow.TalukOrTownName}','${eachRow.PHCCode}')`
-            let logger = fs.createWriteStream('sql.txt', {
-                flags: 'a' // 'a' means appending (old data will be preserved)
-            })
-            logger.write(`\n${query}`);
-        }
-        // for (let i = 0; i < data.length; i++) {
-        //     let eachRow = data[i];
-        //     // let id =   `${String(generateUniqueId())}${i+1}`
-        //     let query = `UPDATE PhcoAssign set Role='${eachRow.Role}', PHCCode='${eachRow.PHCCode}', CreatedBy='${eachRow.PHCRole}' where Mobile='${eachRow.Mobile}'`
-        //     let logger = fs.createWriteStream('updatePhc.txt', {
-        //         flags: 'a' // 'a' means appending (old data will be preserved)
-        //     })
-        //     logger.write(`\n${query}`);
-        // }
-        res.send("Written in sql.text file.")
-
-    } catch (error) {
-        return await webAppResponse(res, error);
-    }
-});
 export {
     adminRouter
 };
