@@ -76,7 +76,7 @@ userRouter.post('/sample', async (req, res) => {
     }
 });
 
-userRouter.post('/saveSurveyData', async (req, res) => {
+userRouter.post('/saveSurveyData', authTokenAndVersion, async (req, res) => {
     try {
         let body = {...req.body, ...{UserId: req.headers["userid"]}};
         let result = await userServices.saveSurveyData(body);

@@ -155,10 +155,27 @@ export class AdminServices {
         return this.adminRepo.getCountsOfDistrictAndTaluk(data);
     }
     async getDistinctTaluk(data) {
-        return this.adminRepo.getDistinctTaluk(data);
+        const { Type } = data;
+        if(Type === 'Taluk'){
+            return this.adminRepo.getDistinctTaluk(data);
+        } else if(Type === 'Phc') {
+            return this.adminRepo.getDistinctPhc(data);
+        } else {
+            return this.adminRepo.getDistinctSubCenter(data);
+        }
     }
-
-    async getDistinctSubCenter(data) {
-        return this.adminRepo.getDistinctSubCenter(data);
+    async getReportsOfEachScheme(data) {
+      const { Scheme, SearchType} = data;
+      if(!Scheme) return { code: 422, message: "Provide Scheme"}
+      if(!SearchType) return { code: 422, message: "Provide SearchType"}
+        return this.adminRepo.getReportsOfEachScheme(data);
+    }
+    async sendOtpForWebQr(data) {
+      const { Mobile } = data;
+      if(!Mobile) return { code: 422, message: "Provide Mobile."}
+      data.Otp = generateOTP(4);
+      let sendSingleSms = await this.otpServices.sendSmsInKannadaUnicode(Mobile, data?.Otp);
+      await saveMobileOtps(Mobile, sendSingleSms?.otpMessage, sendSingleSms?.response, data?.UserId, data?.Otp);
+      return this.adminRepo.sendOtpForWebQr(data);
     }
 }

@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { AppDataSource } from '../db/config';
-import { AdminData, AnnaBhagya, DistrictAssign, GSMasterData, GruhaJyothi, GruhaLakshmi, PhcoAssign, RefractionistLogin, Shakthi, TalukAssign, YuvaNidhi } from '../entities';
+import { AdminData, AnnaBhagya, DistrictAssign, GSMasterData, GruhaJyothi, GruhaLakshmi, PhcoAssign, RefractionistLogin, Shakthi, ShakthiQrOtp, TalukAssign, YuvaNidhi } from '../entities';
 
 const masterDataRepo = AppDataSource.getRepository(GSMasterData);
 const refractionistRepo = AppDataSource.getRepository(RefractionistLogin);
@@ -13,6 +13,7 @@ const shakthiRepo = AppDataSource.getRepository(Shakthi);
 const talukAssignRepo = AppDataSource.getRepository(TalukAssign);
 const districtAssignRepo = AppDataSource.getRepository(DistrictAssign);
 const phcAssignRepo = AppDataSource.getRepository(PhcoAssign);
+const shakthiQrOtpRepo = AppDataSource.getRepository(ShakthiQrOtp);
 
 @Service()
 export class AdminRepo {
@@ -116,26 +117,35 @@ export class AdminRepo {
       const { Mobile, id } = data;
       let checkMobile  = await districtAssignRepo.countBy({Mobile});
       if(checkMobile && checkMobile >= 1) return {code: 400, message: "Already Registered."};
-      let findData = await districtAssignRepo.findOneBy({id})
-      let newData = {...findData, ...data};
-      return await districtAssignRepo.save(newData);
+      if(id){
+         let findData = await districtAssignRepo.findOneBy({id})
+         let newData = {...findData, ...data};
+         return await districtAssignRepo.save(newData);
+      }
+      return await districtAssignRepo.save(data);
    };
    async assignToPhcNew(data) {
       const { id, Mobile } = data;
       let checkMobile  = await phcAssignRepo.countBy({Mobile});
       if(checkMobile && checkMobile >= 1) return {code: 400, message: "Already Registered."};
-      let findData = await phcAssignRepo.findOneBy({id});
-      let newData = {...findData, ...data};
-      return await phcAssignRepo.save(newData);
+      if(id){
+         let findData = await phcAssignRepo.findOneBy({id})
+         let newData = {...findData, ...data};
+         return await phcAssignRepo.save(newData);
+      }
+      return await phcAssignRepo.save(data);
    };
 
    async assignToTalukNew(data) {
       const { Mobile, id } = data;
       let checkMobile  = await talukAssignRepo.countBy({Mobile});
       if(checkMobile && checkMobile >= 1) return {code: 400, message: "Already Registered."};
-      let findData = await talukAssignRepo.findOneBy({id});
-      let newData = {...findData, ...data};
-      return await talukAssignRepo.save(newData);
+      if(id){
+         let findData = await talukAssignRepo.findOneBy({id});
+         let newData = {...findData, ...data};
+         return await talukAssignRepo.save(newData);
+      }
+      return await talukAssignRepo.save(data);
    };
 
    async addRefractionist(data) {
@@ -183,22 +193,46 @@ export class AdminRepo {
 
    async getDistinctTaluk(data) {
       let result = await masterDataRepo.createQueryBuilder("master")
-      .select(`DISTINCT master.TalukOrTownCode, 
-             master.TalukOrTownName as TalukOrTownName,`)
-      .where("master.DistrictName= :id", {id: data?.district})
+      .select(`DISTINCT master.TalukOrTownCode as value, 
+             master.TalukOrTownName as role`)
+      .where("master.DistrictName = :name", {name: data?.Code})
       .orderBy("master.TalukOrTownName", "ASC")
       .getRawMany();
       return result;
 
    }
 
+   async getDistinctPhc(data) {
+      let result = await masterDataRepo.createQueryBuilder("master")
+      .select(`DISTINCT master.PHCCode as value, 
+      master.PHCName as role`)
+      .where("master.TalukOrTownCode = :id", {id: data?.Code})
+      .orderBy("master.PHCName", "ASC")
+      .getRawMany();
+      return result;
+   }
+
    async getDistinctSubCenter(data) {
       let result = await masterDataRepo.createQueryBuilder("master")
-      .select(`DISTINCT master.SubCenterCode, 
-      master.SubCenterName as SubCenterName,`)
-      .where("master.TalukOrTownName= :id", {id: data?.taluk})
+      .select(`DISTINCT master.SubCenterCode as value, 
+      master.SubCenterName as role`)
+      .where("master.PHCCode = :id", {id: data?.Code})
       .orderBy("master.SubCenterName", "ASC")
       .getRawMany();
       return result;
+   }
+
+   async getReportsOfEachScheme(data) {
+      const { Scheme, SearchType, DistrictCode, TalukCode, PhcCode, SubCenterCode, FromDate, ToDate} = data;
+      let query = 'exec getReportsOfEachScheme @0,@1,@2,@3,@4,@5,@6,@7';
+      let result = await AppDataSource.query(query, [Scheme, SearchType, DistrictCode, TalukCode, PhcCode, SubCenterCode, FromDate, ToDate]);
+      return result;
+   }
+
+   async sendOtpForWebQr(data) {
+      const { Mobile } = data;
+      let findData = await shakthiQrOtpRepo.findOneBy({Mobile});
+      let newData = {...findData, ...data};
+      return await shakthiQrOtpRepo.save(newData);
    }
 };

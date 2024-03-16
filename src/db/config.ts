@@ -24,7 +24,7 @@ export const AppDataSource= new DataSource({
   logging: false,
   synchronize: false,
   options: {
-      encrypt: false
+      encrypt: false,
   },
   pool: {
     max: 10,

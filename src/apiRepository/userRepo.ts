@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { AppDataSource } from '../db/config';
-import { AnnaBhagya, GruhaJyothi, GruhaLakshmi, PersonLocation, Shakthi, Version, YuvaNidhi } from '../entities';
+import { AnnaBhagya, GruhaJyothi, GruhaLakshmi, PersonLocation, RCDeathOrAdd, Shakthi, Version, YuvaNidhi } from '../entities';
 import { KutumbaData } from '../entities/KutumbaData';
 import { RefractionistLogin } from '../entities/RefractionistLogin';
 import Logger from '../loggers/winstonLogger';
@@ -14,6 +14,7 @@ const yuvaNidhiRepo = AppDataSource.getRepository(YuvaNidhi);
 const annaBhagyaRepo = AppDataSource.getRepository(AnnaBhagya);
 const shakthiRepo = AppDataSource.getRepository(Shakthi);
 const personLocationRepo = AppDataSource.getRepository(PersonLocation);
+const rcDeathOrAddRepo = AppDataSource.getRepository(RCDeathOrAdd);
 
 @Service()
 export class UserRepo {
@@ -205,6 +206,23 @@ export class UserRepo {
     };
     async savingToShakthiForMobileBase(data) {
         return await shakthiRepo.save(data);
+    };
+    async savingToShakthiTOQrSurvey(data) {
+        const {Mobile} = data;
+        let findData = await shakthiRepo.findOneBy({Mobile});
+        if(findData) return {code: 404, message: "Already Registered."}
+        return await shakthiRepo.save(data);
+    };
+
+    async savingDeathPersonData(data) {
+        const {RcNo, MemberId} = data;
+        let findData = await rcDeathOrAddRepo.findOneBy({RcNo, MemberId});
+        if(findData) return {code: 404, message: "Already Registered."};
+        return await rcDeathOrAddRepo.save(data);
+    };
+
+    async savingNewRcPersonData(data) {
+        return await rcDeathOrAddRepo.save(data);
     };
 
     // async savaPersonLocaion(data) {
