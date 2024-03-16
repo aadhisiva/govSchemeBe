@@ -136,7 +136,7 @@ adminRouter.post('/getCountsOfDistrictAndTaluk', async (req, res) => {
     }
 });
 
-adminRouter.post('/getDistinctTaluk', async (req, res) => {
+adminRouter.post('/getDistinctOfEach', async (req, res) => {
     try {
         let body = req.body;
         let result = await adminServices.getDistinctTaluk(body);
@@ -146,11 +146,21 @@ adminRouter.post('/getDistinctTaluk', async (req, res) => {
     }
 });
 
-adminRouter.post('/getDistinctSubCenter', async (req, res) => {
+adminRouter.post('/getReportsOfEachScheme', async (req, res) => {
     try {
         let body = req.body;
-        let result = await adminServices.getDistinctSubCenter(body);
-        return await webAppResponseForLarge(res, result, "", "getDistinctSubCenter", WEBMESSAGES.GET_ALLDATA, "userid", "role");
+        let result = await adminServices.getReportsOfEachScheme(body);
+        return await webAppResponseForLarge(res, result, "", "getReportsOfEachScheme", WEBMESSAGES.GET_ALLDATA, "userid", "role");
+    } catch (error) {
+        return await webAppResponse(res, error);
+    }
+});
+
+adminRouter.post('/sendOtpForWebQr', async (req, res) => {
+    try {
+        let body = req.body;
+        let result = await adminServices.sendOtpForWebQr(body);
+        return await webAppResponseForLarge(res, result, "", "senOtpForWebQr", WEBMESSAGES.GET_ALLDATA, "userid", "role");
     } catch (error) {
         return await webAppResponse(res, error);
     }

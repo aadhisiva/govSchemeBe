@@ -56,6 +56,15 @@ import {
     @Column({type: 'nvarchar', length: 'max', default: null})
     YN4: string;
   
+    @Column({type: 'nvarchar', length: '1000', default: null})
+    YN5: string;
+  
+    @Column({type: 'nvarchar', length: '1000', default: null})
+    YN6: string;
+  
+    @Column({type: 'nvarchar', length: '1000', default: null})
+    YN7: string;
+  
     @Column({type: 'nvarchar', length: 20, default: null})
     SurveyStatus: string;
   

@@ -16,4 +16,6 @@ export * from "./admin";
 export * from "./DistrictAssign";
 export * from "./TakukAssign";
 export * from "./PhcoAssign";
+export * from "./ShakthiQrOtp";
+export * from "./RcDeathOrAdd";
 

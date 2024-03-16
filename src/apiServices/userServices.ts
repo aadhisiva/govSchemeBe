@@ -190,9 +190,25 @@ export class UserServices {
             await this.userRepo.saveStatusOfEachPerson(RcNo, MemberId);
             return newArray;
 
+        } else if(SurveyMode === "QrSurvey"){
+            if (ShakthiScheme) {
+                let newData = { ...ShakthiScheme, ...{Name, Age, Mobile, SurveyMode, UserId } };
+                let saveData = await this.userRepo.savingToShakthiTOQrSurvey(newData)
+                return saveData;
+            }
+        } else if(SurveyMode === "DeathPerson"){
+            let getUserData = await this.userRepo.getLoginDetails(UserId);
+            let newData = { ...data, ...getUserData };
+            return await this.userRepo.savingDeathPersonData(newData);
+        } else if(SurveyMode === "NewPerson"){
+            if(!RcNo) return {code: 400, message: "Provide RcNo"};
+            if(!data?.RelationShip) return {code: 400, message: "Provide RelationShip."}
+            let MemberIdGen = generateUniqueId();
+            let getUserData = await this.userRepo.getLoginDetails(UserId);
+            let newData = { ...data, ...getUserData, ...{MemberId: MemberIdGen} };
+            return await this.userRepo.savingNewRcPersonData(newData);
         }
     }
-
     async saveSurveyLocation(data) {
         const { MemberId, RcNo, UserId } = data;
         if (!MemberId || !RcNo) return { code: 400 };
